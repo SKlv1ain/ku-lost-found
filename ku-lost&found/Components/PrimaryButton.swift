@@ -12,12 +12,12 @@ struct PrimaryButton: View {
                 if let icon { Image(systemName: icon) }
                 Text(label)
                     .font(Font.Sarabun.semibold(16))
+                    .tracking(0.2)
             }
             .frame(maxWidth: .infinity)
             .foregroundStyle(.white)
-            .padding(.vertical, 13)
+            .padding(.vertical, 14)
             .background(color, in: RoundedRectangle(cornerRadius: KUTheme.Radius.btn, style: .continuous))
-            .shadow(color: color.opacity(0.25), radius: 6, x: 0, y: 2)
         }
         .buttonStyle(KUPressStyle())
     }

@@ -9,7 +9,7 @@ struct KUSearchBar: View {
         HStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(KUTheme.Palette.primary700)
+                .foregroundStyle(KUTheme.Palette.neutral600)
             TextField(placeholder, text: $text)
                 .focused($focused)
                 .font(Font.Sarabun.regular(15))
@@ -23,13 +23,14 @@ struct KUSearchBar: View {
             }
         }
         .padding(.horizontal, 12)
-        .padding(.vertical, 9)
-        .background(focused ? KUTheme.Palette.white : KUTheme.Palette.primary50)
+        .padding(.vertical, 10)
+        .background(KUTheme.Palette.neutral100)
         .clipShape(RoundedRectangle(cornerRadius: KUTheme.Radius.btn, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: KUTheme.Radius.btn, style: .continuous)
-                .stroke(KUTheme.Palette.primary700.opacity(focused ? 0.18 : 0), lineWidth: 3)
+                .stroke(focused ? KUTheme.Palette.neutral900 : KUTheme.Palette.neutral200,
+                        lineWidth: focused ? 1.5 : 1)
         )
-        .animation(.easeOut(duration: 0.2), value: focused)
+        .animation(.easeOut(duration: 0.18), value: focused)
     }
 }

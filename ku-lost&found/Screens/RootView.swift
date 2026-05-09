@@ -58,18 +58,17 @@ struct RootView: View {
             } label: {
                 ZStack {
                     Circle()
-                        .fill(LinearGradient(
-                            colors: [KUTheme.Palette.primary500, KUTheme.Palette.primary700],
-                            startPoint: .top, endPoint: .bottom))
-                        .frame(width: 56, height: 56)
-                        .shadow(color: KUTheme.Palette.primary700.opacity(0.4), radius: 8, y: 2)
+                        .fill(KUTheme.Palette.neutral900)
+                        .frame(width: 58, height: 58)
+                        .overlay(Circle().stroke(.white, lineWidth: 4))
+                        .shadow(color: .black.opacity(0.18), radius: 6, y: 2)
                     Image(systemName: "plus")
                         .font(.system(size: 22, weight: .bold))
                         .foregroundStyle(.white)
                 }
             }
             .buttonStyle(KUPressStyle())
-            .offset(y: -16)
+            .offset(y: -18)
         }
         .frame(maxWidth: .infinity)
     }

@@ -41,7 +41,10 @@ struct ItemCard: View {
             }
             .padding(14)
             .background(KUTheme.Palette.white, in: RoundedRectangle(cornerRadius: KUTheme.Radius.lg, style: .continuous))
-            .kuShadow()
+            .overlay(
+                RoundedRectangle(cornerRadius: KUTheme.Radius.lg, style: .continuous)
+                    .stroke(KUTheme.Palette.neutral200, lineWidth: 1)
+            )
         }
         .buttonStyle(KUTappableStyle())
     }
