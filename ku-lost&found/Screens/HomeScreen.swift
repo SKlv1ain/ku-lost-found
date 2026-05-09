@@ -99,15 +99,18 @@ struct HomeScreen: View {
                     }
                 }
                 Spacer()
-                ZStack {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(KUTheme.Palette.primary700)
-                    Image(systemName: "magnifyingglass")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundStyle(.white)
+                Button(action: {}) {
+                    Image(systemName: "bell")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(KUTheme.Palette.neutral900)
+                        .frame(width: 38, height: 38)
+                        .background(KUTheme.Palette.white)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .stroke(KUTheme.Palette.neutral200, lineWidth: 1)
+                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                 }
-                .frame(width: 38, height: 38)
-                .kuShadow()
             }
             KUSearchBar(text: $search)
         }

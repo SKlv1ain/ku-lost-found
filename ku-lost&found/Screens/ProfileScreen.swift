@@ -51,14 +51,11 @@ struct ProfileScreen: View {
     private var profileHeader: some View {
         VStack(spacing: 10) {
             ZStack {
-                Circle()
-                    .fill(LinearGradient(
-                        colors: [KUTheme.Palette.primary700, KUTheme.Palette.primary500],
-                        startPoint: .topLeading, endPoint: .bottomTrailing))
+                Circle().fill(KUTheme.Palette.neutral900)
                 Text("👤").font(.system(size: 48))
             }
             .frame(width: 96, height: 96)
-            .kuShadow(KUTheme.Shadow.md)
+            .overlay(Circle().stroke(KUTheme.Palette.neutral200, lineWidth: 1))
             VStack(spacing: 4) {
                 Text("Sai Khun Main")
                     .font(Font.Sarabun.bold(20))
@@ -75,7 +72,10 @@ struct ProfileScreen: View {
         .frame(maxWidth: .infinity)
         .padding(.vertical, 20)
         .background(KUTheme.Palette.white, in: RoundedRectangle(cornerRadius: KUTheme.Radius.xl, style: .continuous))
-        .kuShadow()
+        .overlay(
+            RoundedRectangle(cornerRadius: KUTheme.Radius.xl, style: .continuous)
+                .stroke(KUTheme.Palette.neutral200, lineWidth: 1)
+        )
     }
 
     private func tag(_ s: String) -> some View {
@@ -108,7 +108,10 @@ struct ProfileScreen: View {
         .frame(maxWidth: .infinity)
         .padding(.vertical, 14)
         .background(KUTheme.Palette.white, in: RoundedRectangle(cornerRadius: KUTheme.Radius.lg, style: .continuous))
-        .kuShadow()
+        .overlay(
+            RoundedRectangle(cornerRadius: KUTheme.Radius.lg, style: .continuous)
+                .stroke(KUTheme.Palette.neutral200, lineWidth: 1)
+        )
     }
 
     @ViewBuilder
@@ -130,7 +133,10 @@ struct ProfileScreen: View {
             settingsRow(icon: "info.circle.fill", label: "About")
         }
         .background(KUTheme.Palette.white, in: RoundedRectangle(cornerRadius: KUTheme.Radius.lg, style: .continuous))
-        .kuShadow()
+        .overlay(
+            RoundedRectangle(cornerRadius: KUTheme.Radius.lg, style: .continuous)
+                .stroke(KUTheme.Palette.neutral200, lineWidth: 1)
+        )
     }
 
     private var divider: some View {

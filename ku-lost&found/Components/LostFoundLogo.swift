@@ -7,7 +7,7 @@ struct LostFoundLogo: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(KUTheme.Palette.primary700)
+                .fill(KUTheme.Palette.neutral900)
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 22, weight: .bold))
                 .foregroundStyle(.white)
