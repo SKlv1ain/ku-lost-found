@@ -1,24 +1,9 @@
-//
-//  ContentView.swift
-//  ku-lost&found
-//
-//  Created by SK Main on 1/5/2569 BE.
-//
-
 import SwiftUI
 
+// Boilerplate replaced — the app launches RootView directly from ku_lost_foundApp.
+// Kept as a thin wrapper so existing previews/Xcode templates still work.
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, meen!")
-        }
-        .padding()
-    }
+    var body: some View { RootView() }
 }
 
-#Preview {
-    ContentView()
-}
+#Preview { ContentView() }
