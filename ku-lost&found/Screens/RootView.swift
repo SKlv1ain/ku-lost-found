@@ -5,6 +5,7 @@ enum RootTab: Hashable {
 }
 
 struct RootView: View {
+    var authVM: AuthViewModel
     @State private var tab: RootTab = .home
     @State private var detail: Item? = nil
     @State private var reportType: ItemStatus? = nil
@@ -34,7 +35,7 @@ struct RootView: View {
         case .home:    HomeScreen(onItem: { detail = $0 }, onReport: { reportType = $0 })
         case .explore: ExploreScreen(onItem: { detail = $0 })
         case .my:      MyItemsScreen(onItem: { detail = $0 }, onReport: { reportType = .lost })
-        case .profile: ProfileScreen(onItem: { detail = $0 })
+        case .profile: ProfileScreen(authVM: authVM, onItem: { detail = $0 })
         }
     }
 
@@ -93,4 +94,4 @@ private struct ReportSheetType: Identifiable {
     var id: String { status.rawValue }
 }
 
-#Preview { RootView() }
+#Preview { RootView(authVM: AuthViewModel()) }
