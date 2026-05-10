@@ -90,7 +90,8 @@ final class AuthViewModel {
         do {
             let session = try await supabase.auth.signInWithOAuth(
                 provider: .google,
-                redirectTo: URL(string: "ku-lost-found://auth-callback")
+                redirectTo: URL(string: "ku-lost-found://auth-callback"),
+                queryParams: [("prompt", "select_account")]
             )
             user = session.user
             isAuthenticated = true
