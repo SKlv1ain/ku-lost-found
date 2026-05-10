@@ -1,7 +1,17 @@
 import SwiftUI
+import Supabase
 
 struct ProfileScreen: View {
+    var authVM: AuthViewModel
     var onItem: (Item) -> Void
+
+    private var displayName: String {
+        if let meta = authVM.user?.userMetadata,
+           let name = meta["full_name"]?.stringValue, !name.isEmpty {
+            return name
+        }
+        return authVM.user?.email?.components(separatedBy: "@").first ?? "User"
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -57,10 +67,10 @@ struct ProfileScreen: View {
             .frame(width: 96, height: 96)
             .overlay(Circle().stroke(KUTheme.Palette.neutral200, lineWidth: 1))
             VStack(spacing: 4) {
-                Text("Sai Khun Main")
+                Text(displayName)
                     .font(Font.Sarabun.bold(20))
                     .foregroundStyle(KUTheme.Palette.neutral900)
-                Text("saikhunmain.skhm@gmail.com")
+                Text(authVM.user?.email ?? "—")
                     .font(Font.Sarabun.regular(13))
                     .foregroundStyle(KUTheme.Palette.neutral600)
             }
@@ -164,7 +174,7 @@ struct ProfileScreen: View {
     }
 
     private var signOutButton: some View {
-        Button(action: {}) {
+        Button(action: { Task { await authVM.signOut() } }) {
             HStack(spacing: 6) {
                 Image(systemName: "arrow.right.square")
                 Text("Sign out")
@@ -179,4 +189,4 @@ struct ProfileScreen: View {
     }
 }
 
-#Preview { ProfileScreen(onItem: { _ in }) }
+#Preview { ProfileScreen(authVM: AuthViewModel(), onItem: { _ in }) }
