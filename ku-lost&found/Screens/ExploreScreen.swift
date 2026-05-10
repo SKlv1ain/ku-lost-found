@@ -2,6 +2,7 @@ import SwiftUI
 import MapKit
 
 struct ExploreScreen: View {
+    var itemsVM: ItemsViewModel
     var onItem: (Item) -> Void
 
     @State private var position: MapCameraPosition = .region(
@@ -10,7 +11,7 @@ struct ExploreScreen: View {
     )
     @State private var selected: Item? = nil
 
-    private var pinned: [Item] { SampleData.items.filter { $0.coordinate != nil } }
+    private var pinned: [Item] { itemsVM.items.filter { $0.coordinate != nil } }
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -189,4 +190,4 @@ private struct MapBottomCard: View {
     }
 }
 
-#Preview { ExploreScreen(onItem: { _ in }) }
+#Preview { ExploreScreen(itemsVM: ItemsViewModel(), onItem: { _ in }) }

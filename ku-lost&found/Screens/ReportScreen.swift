@@ -121,7 +121,7 @@ struct ReportScreen: View {
                         WrapHStack {
                             ForEach(SampleData.categories.dropFirst(), id: \.self) { c in
                                 Button { category = c } label: {
-                                    Text(c.rawValue)
+                                    Text(c.label)
                                         .font(Font.Sarabun.medium(13))
                                         .foregroundStyle(category == c ? .white : KUTheme.Palette.neutral700)
                                         .padding(.horizontal, 14)

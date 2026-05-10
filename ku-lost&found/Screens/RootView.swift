@@ -1,4 +1,5 @@
 import SwiftUI
+import Auth
 
 enum RootTab: Hashable {
     case home, explore, my, profile
@@ -9,14 +10,19 @@ struct RootView: View {
     @State private var tab: RootTab = .home
     @State private var detail: Item? = nil
     @State private var reportType: ItemStatus? = nil
+    @State private var itemsVM = ItemsViewModel()
 
     var body: some View {
         ZStack(alignment: .bottom) {
             content
-                .padding(.bottom, 56)        // leave room for tab bar
+                .padding(.bottom, 56)
             customTabBar
         }
         .background(KUTheme.Palette.neutral100.ignoresSafeArea())
+        .task {
+            itemsVM.setUser(authVM.user?.id)
+            await itemsVM.fetch()
+        }
         .sheet(item: $detail) { item in
             ItemDetailScreen(item: item) { detail = nil }
                 .presentationDragIndicator(.visible)
@@ -32,10 +38,10 @@ struct RootView: View {
     @ViewBuilder
     private var content: some View {
         switch tab {
-        case .home:    HomeScreen(onItem: { detail = $0 }, onReport: { reportType = $0 })
-        case .explore: ExploreScreen(onItem: { detail = $0 })
-        case .my:      MyItemsScreen(onItem: { detail = $0 }, onReport: { reportType = .lost })
-        case .profile: ProfileScreen(authVM: authVM, onItem: { detail = $0 })
+        case .home:    HomeScreen(itemsVM: itemsVM, onItem: { detail = $0 }, onReport: { reportType = $0 })
+        case .explore: ExploreScreen(itemsVM: itemsVM, onItem: { detail = $0 })
+        case .my:      MyItemsScreen(itemsVM: itemsVM, onItem: { detail = $0 }, onReport: { reportType = .lost })
+        case .profile: ProfileScreen(authVM: authVM, itemsVM: itemsVM, onItem: { detail = $0 })
         }
     }
 
@@ -44,7 +50,7 @@ struct RootView: View {
             HStack(spacing: 0) {
                 tabButton(.home,    label: "Home",     systemName: "house.fill")
                 tabButton(.explore, label: "Explore",  systemName: "map.fill")
-                Color.clear.frame(maxWidth: .infinity)   // gap for FAB
+                Color.clear.frame(maxWidth: .infinity)
                 tabButton(.my,      label: "My Items", systemName: "tray.full.fill")
                 tabButton(.profile, label: "Profile",  systemName: "person.fill")
             }

@@ -3,6 +3,7 @@ import Supabase
 
 struct ProfileScreen: View {
     var authVM: AuthViewModel
+    var itemsVM: ItemsViewModel
     var onItem: (Item) -> Void
 
     private var displayName: String {
@@ -22,7 +23,7 @@ struct ProfileScreen: View {
                     statRow
                     section(title: "My reports", action: "See all") {
                         VStack(spacing: 10) {
-                            ForEach(SampleData.items.prefix(2)) { item in
+                            ForEach(itemsVM.myItems.prefix(2)) { item in
                                 ItemCard(item: item) { onItem(item) }
                             }
                         }
@@ -189,4 +190,4 @@ struct ProfileScreen: View {
     }
 }
 
-#Preview { ProfileScreen(authVM: AuthViewModel(), onItem: { _ in }) }
+#Preview { ProfileScreen(authVM: AuthViewModel(), itemsVM: ItemsViewModel(), onItem: { _ in }) }

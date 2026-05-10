@@ -1,12 +1,11 @@
 import SwiftUI
 
 struct MyItemsScreen: View {
+    var itemsVM: ItemsViewModel
     var onItem: (Item) -> Void
     var onReport: () -> Void
 
-    private var myItems: [Item] {
-        SampleData.items.filter { [1, 4].contains($0.id) }
-    }
+    private var myItems: [Item] { itemsVM.myItems }
 
     private var locationGroups: [(location: String, items: [Item], accent: Color)] {
         let buckets = Dictionary(grouping: myItems, by: { $0.location })
@@ -145,4 +144,4 @@ private struct StripedGradient: View {
     }
 }
 
-#Preview { MyItemsScreen(onItem: { _ in }, onReport: {}) }
+#Preview { MyItemsScreen(itemsVM: ItemsViewModel(), onItem: { _ in }, onReport: {}) }

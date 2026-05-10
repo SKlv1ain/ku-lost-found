@@ -81,7 +81,7 @@ struct ItemDetailScreen: View {
             divider
             metaRow(icon: "clock", label: "Reported", value: item.time)
             divider
-            metaRow(icon: "number", label: "Item ID", value: String(format: "KU-%05d", item.id), monospaced: true)
+            metaRow(icon: "number", label: "Item ID", value: "KU-\(item.id.uuidString.prefix(8))", monospaced: true)
         }
         .background(KUTheme.Palette.white, in: RoundedRectangle(cornerRadius: KUTheme.Radius.lg, style: .continuous))
         .kuShadow()

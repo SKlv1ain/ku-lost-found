@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct BrowseScreen: View {
+    var itemsVM: ItemsViewModel
     var onItem: (Item) -> Void
 
     @State private var activeStatus: ItemStatus? = nil
@@ -9,7 +10,7 @@ struct BrowseScreen: View {
     private let statuses: [ItemStatus?] = [nil, .found, .lost, .claimed]
 
     private var filtered: [Item] {
-        SampleData.items.filter { i in
+        itemsVM.items.filter { i in
             (activeStatus == nil || i.status == activeStatus)
             && (activeCategory == .all || i.category == activeCategory)
         }
@@ -30,7 +31,7 @@ struct BrowseScreen: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         ForEach(SampleData.categories, id: \.self) { c in
-                            CategoryChip(label: c.rawValue, isActive: activeCategory == c) {
+                            CategoryChip(label: c.label, isActive: activeCategory == c) {
                                 activeCategory = c
                             }
                         }
@@ -74,4 +75,4 @@ struct BrowseScreen: View {
     }
 }
 
-#Preview { BrowseScreen(onItem: { _ in }) }
+#Preview { BrowseScreen(itemsVM: ItemsViewModel(), onItem: { _ in }) }

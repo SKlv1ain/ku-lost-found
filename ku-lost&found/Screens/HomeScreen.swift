@@ -1,17 +1,18 @@
 import SwiftUI
 
 struct HomeScreen: View {
+    var itemsVM: ItemsViewModel
     var onItem: (Item) -> Void
     var onReport: (ItemStatus) -> Void
 
     @State private var search = ""
-    @State private var activeStatus: ItemStatus? = nil   // nil == "all"
+    @State private var activeStatus: ItemStatus? = nil
     @State private var activeCategory: ItemCategory = .all
 
     private let statuses: [ItemStatus?] = [nil, .found, .lost, .claimed]
 
     private var filtered: [Item] {
-        SampleData.items.filter { item in
+        itemsVM.items.filter { item in
             let q = search.lowercased()
             let qOk = q.isEmpty
                 || item.title.lowercased().contains(q)
@@ -48,7 +49,7 @@ struct HomeScreen: View {
                         HStack(spacing: 8) {
                             ForEach(SampleData.categories, id: \.self) { c in
                                 CategoryChip(
-                                    label: c.rawValue,
+                                    label: c.label,
                                     isActive: activeCategory == c
                                 ) { activeCategory = c }
                             }
@@ -58,7 +59,10 @@ struct HomeScreen: View {
 
                     SectionHeader(title: "\(filtered.count) item\(filtered.count == 1 ? "" : "s")")
 
-                    if filtered.isEmpty {
+                    if itemsVM.isLoading && itemsVM.items.isEmpty {
+                        ProgressView()
+                            .padding(.vertical, 40)
+                    } else if filtered.isEmpty {
                         VStack(spacing: 8) {
                             Text("🔍").font(.system(size: 36))
                             Text("No matching items").font(Font.Sarabun.medium(15))
@@ -79,6 +83,7 @@ struct HomeScreen: View {
                 .padding(.top, 16)
                 .padding(.bottom, 80)
             }
+            .refreshable { await itemsVM.fetch() }
         }
         .background(KUTheme.Palette.neutral100.ignoresSafeArea())
     }
@@ -125,5 +130,5 @@ struct HomeScreen: View {
 }
 
 #Preview {
-    HomeScreen(onItem: { _ in }, onReport: { _ in })
+    HomeScreen(itemsVM: ItemsViewModel(), onItem: { _ in }, onReport: { _ in })
 }
