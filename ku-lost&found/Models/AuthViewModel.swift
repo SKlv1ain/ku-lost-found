@@ -13,6 +13,8 @@ final class AuthViewModel {
     var isSignUp = false          // toggle between Sign In / Sign Up
     var errorMessage: String?
     var isBusy = false            // true during an auth request
+    var showSignUpSuccess = false  // show success overlay after sign-up
+    var signedUpEmail = ""         // email shown in success overlay
 
     // The current Supabase user (nil when signed out).
     private(set) var user: User?
@@ -49,10 +51,10 @@ final class AuthViewModel {
             case .session(let session):
                 user = session.user
                 isAuthenticated = true
-            case .user(let u):
-                // Email confirmation required — user exists but no session yet
-                user = u
-                errorMessage = "Check your email to confirm your account."
+            case .user:
+                // Email confirmation required — show success overlay
+                signedUpEmail = email.trimmingCharacters(in: .whitespaces)
+                showSignUpSuccess = true
             }
             clearForm()
         } catch {
@@ -97,6 +99,22 @@ final class AuthViewModel {
             isAuthenticated = true
         } catch {
             errorMessage = friendlyError(error)
+        }
+    }
+
+    // MARK: - Deep link handler (email confirmation + OAuth callback)
+    func handle(url: URL) {
+        // Let the SDK parse the URL and emit a new session via its internal listener
+        supabase.auth.handle(url)
+        // Then pull the session (it may take a moment to be ready)
+        Task {
+            do {
+                let session = try await supabase.auth.session
+                user = session.user
+                isAuthenticated = true
+            } catch {
+                // Not an auth URL or session not ready yet — ignore
+            }
         }
     }
 
@@ -146,6 +164,10 @@ final class AuthViewModel {
         if msg.contains("network") || msg.contains("offline") {
             return "No internet connection. Please try again."
         }
-        return "Something went wrong. Please try again."
+        if msg.contains("rate limit") || msg.contains("too many") || msg.contains("email_rate_limit") {
+            return "Too many attempts. Please wait a few minutes and try again."
+        }
+        // Show real error so we know what's happening
+        return error.localizedDescription
     }
 }
