@@ -26,6 +26,9 @@ struct ku_lost_foundApp: App {
                 }
             }
             .task { await authVM.bootstrap() }
+            .onOpenURL { url in
+                authVM.handle(url: url)
+            }
         }
     }
 
