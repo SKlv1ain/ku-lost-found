@@ -81,8 +81,30 @@ struct MyItemsScreen: View {
         Button { if let first = items.first { onItem(first) } } label: {
             VStack(alignment: .leading, spacing: 0) {
                 ZStack(alignment: .topLeading) {
-                    StripedGradient(accent: accent)
-                        .frame(height: 160)
+                    if let firstItem = items.first,
+                       let photoURL = itemsVM.firstPhotoURL(for: firstItem.id) {
+                        AsyncImage(url: photoURL) { phase in
+                            if case .success(let image) = phase {
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(height: 160)
+                                    .clipped()
+                                    .overlay(
+                                        LinearGradient(
+                                            colors: [accent.opacity(0.3), accent.opacity(0.1)],
+                                            startPoint: .topLeading, endPoint: .bottomTrailing
+                                        )
+                                    )
+                            } else {
+                                StripedGradient(accent: accent)
+                                    .frame(height: 160)
+                            }
+                        }
+                    } else {
+                        StripedGradient(accent: accent)
+                            .frame(height: 160)
+                    }
                     HStack {
                         Text(items.first?.status == .lost ? "Lost" : "Found")
                             .font(Font.Sarabun.bold(11))
@@ -102,6 +124,7 @@ struct MyItemsScreen: View {
                         }
                     }
                 }
+                .frame(height: 160)
                 .clipShape(RoundedRectangle(cornerRadius: KUTheme.Radius.lg, style: .continuous))
                 VStack(alignment: .leading, spacing: 4) {
                     Text(location)

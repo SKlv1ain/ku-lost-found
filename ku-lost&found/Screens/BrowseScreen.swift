@@ -3,6 +3,7 @@ import SwiftUI
 struct BrowseScreen: View {
     var itemsVM: ItemsViewModel
     var onItem: (Item) -> Void
+    var onReporterTap: ((UUID) -> Void)? = nil
 
     @State private var activeStatus: ItemStatus? = nil
     @State private var activeCategory: ItemCategory = .all
@@ -49,7 +50,12 @@ struct BrowseScreen: View {
                 VStack(alignment: .leading, spacing: 10) {
                     SectionHeader(title: "\(filtered.count) item\(filtered.count == 1 ? "" : "s")")
                     ForEach(filtered) { item in
-                        ItemCard(item: item) { onItem(item) }
+                        ItemCard(
+                            item: item,
+                            photoURL: itemsVM.firstPhotoURL(for: item.id),
+                            reporterName: itemsVM.reporterName(for: item),
+                            onReporterTap: { if let rid = item.reporterId { onReporterTap?(rid) } }
+                        ) { onItem(item) }
                     }
                 }
                 .padding(.horizontal, 16)
