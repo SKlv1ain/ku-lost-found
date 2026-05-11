@@ -2,14 +2,15 @@ import Foundation
 import CoreLocation
 
 enum ItemStatus: String, CaseIterable, Codable {
-    case found, lost, claimed, expired
+    case found, lost, claimed, expired, returned
 
     var label: String {
         switch self {
-        case .found: return "Found"
-        case .lost: return "Lost"
-        case .claimed: return "Claimed"
-        case .expired: return "Expired"
+        case .found:    return "Found"
+        case .lost:     return "Lost"
+        case .claimed:  return "Claimed"
+        case .expired:  return "Expired"
+        case .returned: return "Returned"
         }
     }
 }
@@ -51,6 +52,8 @@ struct Item: Identifiable, Hashable, Codable {
     let lng: Double?
     let occurredAt: Date?
     let createdAt: Date?
+    let hintQuestion: String?
+    let returnedAt: Date?
 
     var location: String { locationName }
 
@@ -87,8 +90,10 @@ struct Item: Identifiable, Hashable, Codable {
         case locationName = "location_name"
         case status, category, description
         case lat, lng
-        case occurredAt = "occurred_at"
-        case createdAt = "created_at"
+        case occurredAt    = "occurred_at"
+        case createdAt     = "created_at"
+        case hintQuestion  = "hint_question"
+        case returnedAt    = "returned_at"
     }
 
     static func == (lhs: Item, rhs: Item) -> Bool { lhs.id == rhs.id }
