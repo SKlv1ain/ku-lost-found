@@ -2,9 +2,10 @@ import SwiftUI
 
 struct ItemCard: View {
     let item: Item
+    var photoURL: URL? = nil
+    var reporterName: String? = nil
+    var onReporterTap: (() -> Void)? = nil
     let onTap: () -> Void
-
-    @State private var pressed = false
 
     var body: some View {
         Button(action: onTap) {
@@ -12,9 +13,21 @@ struct ItemCard: View {
                 ZStack {
                     RoundedRectangle(cornerRadius: KUTheme.Radius.md, style: .continuous)
                         .fill(item.status == .lost ? KUTheme.Palette.accent50 : KUTheme.Palette.primary50)
-                    Text(item.emoji).font(.system(size: 26))
+
+                    if let photoURL {
+                        AsyncImage(url: photoURL) { phase in
+                            if case .success(let image) = phase {
+                                image.resizable().scaledToFill()
+                            } else {
+                                Text(item.emoji).font(.system(size: 26))
+                            }
+                        }
+                    } else {
+                        Text(item.emoji).font(.system(size: 26))
+                    }
                 }
                 .frame(width: 56, height: 56)
+                .clipShape(RoundedRectangle(cornerRadius: KUTheme.Radius.md, style: .continuous))
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(item.title)
@@ -31,6 +44,21 @@ struct ItemCard: View {
                         Text(item.time)
                             .font(Font.Sarabun.regular(11))
                             .foregroundStyle(KUTheme.Palette.neutral400)
+                    }
+                    if let name = reporterName {
+                        Button {
+                            onReporterTap?()
+                        } label: {
+                            HStack(spacing: 3) {
+                                Image(systemName: "person.circle.fill")
+                                    .font(.system(size: 11))
+                                Text(name)
+                                    .font(Font.Sarabun.medium(11))
+                            }
+                            .foregroundStyle(KUTheme.Palette.primary700)
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.top, 2)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)

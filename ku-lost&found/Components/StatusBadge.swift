@@ -8,8 +8,9 @@ struct StatusBadge: View {
         switch status {
         case .found:   return (KUTheme.Palette.successBg, KUTheme.Palette.success)
         case .lost:    return (KUTheme.Palette.warningBg, KUTheme.Palette.lostText)
-        case .claimed: return (KUTheme.Palette.infoBg,    KUTheme.Palette.info)
-        case .expired: return (KUTheme.Palette.dangerBg,  KUTheme.Palette.danger)
+        case .claimed:  return (KUTheme.Palette.infoBg,    KUTheme.Palette.info)
+        case .expired:  return (KUTheme.Palette.dangerBg,  KUTheme.Palette.danger)
+        case .returned: return (KUTheme.Palette.successBg, KUTheme.Palette.success)
         }
     }
 
