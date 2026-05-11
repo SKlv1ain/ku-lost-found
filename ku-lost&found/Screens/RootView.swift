@@ -10,7 +10,10 @@ struct RootView: View {
     @State private var tab: RootTab = .home
     @State private var detail: Item? = nil
     @State private var reportType: ItemStatus? = nil
+    @State private var publicProfileId: UUID? = nil
+    @State private var showNotifications = false
     @State private var itemsVM = ItemsViewModel()
+    @State private var notifVM = NotificationsViewModel()
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -22,26 +25,59 @@ struct RootView: View {
         .task {
             itemsVM.setUser(authVM.user?.id)
             await itemsVM.fetch()
+            if let uid = authVM.user?.id {
+                await notifVM.fetch(userId: uid)
+            }
         }
         .sheet(item: $detail) { item in
-            ItemDetailScreen(item: item) { detail = nil }
-                .presentationDragIndicator(.visible)
+            ItemDetailScreen(
+                item: item,
+                currentUserId: authVM.user?.id,
+                onBack: { detail = nil },
+                onItemUpdated: { Task { await itemsVM.fetch() } }
+            )
+            .presentationDragIndicator(.visible)
+        }
+        .sheet(isPresented: $showNotifications) {
+            NotificationsScreen(
+                notifVM: notifVM,
+                currentUserId: authVM.user?.id,
+                onItem: { itemId in
+                    showNotifications = false
+                    detail = itemsVM.items.first { $0.id == itemId }
+                },
+                onBack: { showNotifications = false }
+            )
+            .presentationDragIndicator(.visible)
+        }
+        .sheet(item: Binding(
+            get: { publicProfileId.map { ProfileSheetID(id: $0) } },
+            set: { publicProfileId = $0?.id }
+        )) { wrapper in
+            PublicProfileScreen(
+                userId: wrapper.id,
+                onBack: { publicProfileId = nil },
+                onItem: { detail = $0 }
+            )
+            .presentationDragIndicator(.visible)
         }
         .sheet(item: Binding(
             get: { reportType.map { ReportSheetType(status: $0) } },
             set: { reportType = $0?.status }
         )) { wrapper in
-            ReportScreen(type: wrapper.status) { reportType = nil }
+            ReportScreen(type: wrapper.status, onClose: { reportType = nil }, onSubmitted: {
+                Task { await itemsVM.fetch() }
+            })
         }
     }
 
     @ViewBuilder
     private var content: some View {
         switch tab {
-        case .home:    HomeScreen(itemsVM: itemsVM, onItem: { detail = $0 }, onReport: { reportType = $0 })
+        case .home:    HomeScreen(itemsVM: itemsVM, notifVM: notifVM, onItem: { detail = $0 }, onReport: { reportType = $0 }, onReporterTap: { publicProfileId = $0 }, onNotificationsTap: { showNotifications = true })
         case .explore: ExploreScreen(itemsVM: itemsVM, onItem: { detail = $0 })
         case .my:      MyItemsScreen(itemsVM: itemsVM, onItem: { detail = $0 }, onReport: { reportType = .lost })
-        case .profile: ProfileScreen(authVM: authVM, itemsVM: itemsVM, onItem: { detail = $0 })
+        case .profile: ProfileScreen(authVM: authVM, itemsVM: itemsVM, onItem: { detail = $0 }, onSeeAll: { tab = .my })
         }
     }
 
@@ -98,6 +134,10 @@ struct RootView: View {
 private struct ReportSheetType: Identifiable {
     let status: ItemStatus
     var id: String { status.rawValue }
+}
+
+private struct ProfileSheetID: Identifiable {
+    let id: UUID
 }
 
 #Preview { RootView(authVM: AuthViewModel()) }

@@ -2,8 +2,11 @@ import SwiftUI
 
 struct HomeScreen: View {
     var itemsVM: ItemsViewModel
+    var notifVM: NotificationsViewModel
     var onItem: (Item) -> Void
     var onReport: (ItemStatus) -> Void
+    var onReporterTap: ((UUID) -> Void)? = nil
+    var onNotificationsTap: () -> Void = {}
 
     @State private var search = ""
     @State private var activeStatus: ItemStatus? = nil
@@ -74,7 +77,12 @@ struct HomeScreen: View {
                     } else {
                         VStack(spacing: 10) {
                             ForEach(filtered) { item in
-                                ItemCard(item: item) { onItem(item) }
+                                ItemCard(
+                                    item: item,
+                                    photoURL: itemsVM.firstPhotoURL(for: item.id),
+                                    reporterName: itemsVM.reporterName(for: item),
+                                    onReporterTap: { if let rid = item.reporterId { onReporterTap?(rid) } }
+                                ) { onItem(item) }
                             }
                         }
                     }
@@ -104,17 +112,28 @@ struct HomeScreen: View {
                     }
                 }
                 Spacer()
-                Button(action: {}) {
-                    Image(systemName: "bell")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(KUTheme.Palette.neutral900)
-                        .frame(width: 38, height: 38)
-                        .background(KUTheme.Palette.white)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                .stroke(KUTheme.Palette.neutral200, lineWidth: 1)
-                        )
-                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                Button(action: onNotificationsTap) {
+                    ZStack(alignment: .topTrailing) {
+                        Image(systemName: "bell")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundStyle(KUTheme.Palette.neutral900)
+                            .frame(width: 38, height: 38)
+                            .background(KUTheme.Palette.white)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                    .stroke(KUTheme.Palette.neutral200, lineWidth: 1)
+                            )
+                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        if notifVM.unreadCount > 0 {
+                            Text(notifVM.unreadCount > 99 ? "99+" : "\(notifVM.unreadCount)")
+                                .font(.system(size: 9, weight: .bold))
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 4)
+                                .padding(.vertical, 2)
+                                .background(KUTheme.Palette.danger, in: Capsule())
+                                .offset(x: 6, y: -4)
+                        }
+                    }
                 }
             }
             KUSearchBar(text: $search)
@@ -130,5 +149,5 @@ struct HomeScreen: View {
 }
 
 #Preview {
-    HomeScreen(itemsVM: ItemsViewModel(), onItem: { _ in }, onReport: { _ in })
+    HomeScreen(itemsVM: ItemsViewModel(), notifVM: NotificationsViewModel(), onItem: { _ in }, onReport: { _ in })
 }
