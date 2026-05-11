@@ -6,6 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		116AE9AB2FB0A0FC00C9211D /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 116AE9AA2FB0A0FC00C9211D /* Auth */; };
+		116AE9AD2FB0A0FC00C9211D /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 116AE9AC2FB0A0FC00C9211D /* Functions */; };
+		116AE9AF2FB0A0FC00C9211D /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 116AE9AE2FB0A0FC00C9211D /* PostgREST */; };
+		116AE9B12FB0A0FC00C9211D /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = 116AE9B02FB0A0FC00C9211D /* Realtime */; };
+		116AE9B32FB0A0FC00C9211D /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 116AE9B22FB0A0FC00C9211D /* Storage */; };
+		116AE9B52FB0A0FC00C9211D /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 116AE9B42FB0A0FC00C9211D /* Supabase */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		117F08D12FA49C9F006EDA0F /* ku-lost&found.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ku-lost&found.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,16 +32,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				116AE9AF2FB0A0FC00C9211D /* PostgREST in Frameworks */,
+				116AE9AD2FB0A0FC00C9211D /* Functions in Frameworks */,
+				116AE9B52FB0A0FC00C9211D /* Supabase in Frameworks */,
+				116AE9AB2FB0A0FC00C9211D /* Auth in Frameworks */,
+				116AE9B32FB0A0FC00C9211D /* Storage in Frameworks */,
+				116AE9B12FB0A0FC00C9211D /* Realtime in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		116AE9A92FB0A0DA00C9211D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		117F08C82FA49C9F006EDA0F = {
 			isa = PBXGroup;
 			children = (
 				117F08D32FA49C9F006EDA0F /* ku-lost&found */,
+				116AE9A92FB0A0DA00C9211D /* Frameworks */,
 				117F08D22FA49C9F006EDA0F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -65,6 +88,12 @@
 			);
 			name = "ku-lost&found";
 			packageProductDependencies = (
+				116AE9AA2FB0A0FC00C9211D /* Auth */,
+				116AE9AC2FB0A0FC00C9211D /* Functions */,
+				116AE9AE2FB0A0FC00C9211D /* PostgREST */,
+				116AE9B02FB0A0FC00C9211D /* Realtime */,
+				116AE9B22FB0A0FC00C9211D /* Storage */,
+				116AE9B42FB0A0FC00C9211D /* Supabase */,
 			);
 			productName = "ku-lost&found";
 			productReference = 117F08D12FA49C9F006EDA0F /* ku-lost&found.app */;
@@ -94,6 +123,9 @@
 			);
 			mainGroup = 117F08C82FA49C9F006EDA0F;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				112FF64F2FB09DBF00157F8E /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 117F08D22FA49C9F006EDA0F /* Products */;
 			projectDirPath = "";
@@ -177,7 +209,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -234,7 +266,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -251,8 +283,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 34DB8URPK3;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -282,8 +316,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 34DB8URPK3;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -328,6 +364,50 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		112FF64F2FB09DBF00157F8E /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase-community/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		116AE9AA2FB0A0FC00C9211D /* Auth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 112FF64F2FB09DBF00157F8E /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Auth;
+		};
+		116AE9AC2FB0A0FC00C9211D /* Functions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 112FF64F2FB09DBF00157F8E /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Functions;
+		};
+		116AE9AE2FB0A0FC00C9211D /* PostgREST */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 112FF64F2FB09DBF00157F8E /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = PostgREST;
+		};
+		116AE9B02FB0A0FC00C9211D /* Realtime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 112FF64F2FB09DBF00157F8E /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Realtime;
+		};
+		116AE9B22FB0A0FC00C9211D /* Storage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 112FF64F2FB09DBF00157F8E /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Storage;
+		};
+		116AE9B42FB0A0FC00C9211D /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 112FF64F2FB09DBF00157F8E /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 117F08C92FA49C9F006EDA0F /* Project object */;
 }
