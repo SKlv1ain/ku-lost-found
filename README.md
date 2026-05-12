@@ -1,7 +1,10 @@
 # KU Lost & Found
 
 A SwiftUI iOS app for **Kasetsart University** that helps students report and recover lost items on campus. Built as a Year 4 Mobile Development project.
+## Team
 
+- **Sai Khun Main**
+- **Peerawat Theerasakul**
 ## Features
 
 - **Home** — Search and filter recent lost / found items by status and category, with quick-action shortcuts to report.
