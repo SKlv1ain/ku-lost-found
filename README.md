@@ -17,12 +17,105 @@ A SwiftUI iOS app for **Kasetsart University** that helps students report and re
 
 ## Tech Stack
 
-- **Language:** Swift 5
-- **UI:** SwiftUI
-- **Maps:** MapKit
-- **Min iOS:** 17+ (uses `Map(position:)`, `.presentationDetents`, etc.)
-- **Fonts:** [Sarabun](https://fonts.google.com/specimen/Sarabun) (bundled, supports Thai + Latin)
-- **Xcode:** 16+ (uses synchronized file system groups)
+**Language & UI**
+- Swift 5 / SwiftUI
+- MapKit — campus map with pin annotations (`ExploreScreen`)
+- Min iOS: 17+ (uses `Map(position:)`, `.presentationDetents`, `@Observable`)
+- Xcode 16+ (synchronized file system groups)
+- Fonts: [Sarabun](https://fonts.google.com/specimen/Sarabun) (bundled — Light, Regular, Medium, SemiBold, Bold; supports Thai + Latin)
+
+**Backend — Supabase**
+- **Supabase Auth (GoTrue)** — Email/password sign-up & sign-in, Google OAuth via deep link (`ku-lost-found://auth-callback`), email confirmation flow, JWT session persisted in device keychain, restored on launch via `supabase.auth.session`
+- **Supabase Database (PostgreSQL via PostgREST)** — All structured data; queried with the chainable Swift SDK (`.from().select().eq().order()`); results decoded directly into `Codable` Swift structs
+- **Supabase Storage** — Item photos stored in the `item-photos` bucket; public URLs resolved via `getPublicURL(path:)`
+- **Row Level Security (RLS)** — PostgreSQL policies enforce per-user access at the database level; the app communicates directly with Supabase using the publishable anon key
+
+**State Management**
+- `@Observable` (Swift 5.9 Observation framework) — `AuthViewModel`, `ItemsViewModel`, `NotificationsViewModel`
+- No third-party state library
+
+**No external Swift package dependencies** — Supabase Swift SDK is the only dependency; fonts are bundled and registered at startup via `CTFontManagerRegisterFontsForURL`
+
+---
+
+## Database Schema
+
+All tables live in a Supabase (PostgreSQL) project. Row Level Security is enabled on every table.
+
+### `profiles`
+Mirrors `auth.users` — created automatically on sign-up via a database trigger.
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | uuid PK | = `auth.users.id` |
+| `full_name` | text | |
+| `email` | text | |
+| `phone` | text | nullable |
+| `instagram` | text | nullable |
+| `line_id` | text | nullable |
+
+### `items`
+Every lost or found report.
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | uuid PK | |
+| `reporter_id` | uuid FK → profiles | |
+| `title` | text | |
+| `emoji` | text | user-picked icon |
+| `status` | enum | `lost` `found` `claimed` `expired` `returned` |
+| `category` | enum | `electronics` `clothing` `id_card` `keys` `bag` `books` `other` |
+| `description` | text | |
+| `location_name` | text | human-readable location |
+| `lat` | float8 | nullable |
+| `lng` | float8 | nullable |
+| `occurred_at` | timestamptz | when item was lost/found |
+| `created_at` | timestamptz | when report was filed |
+| `hint_question` | text | nullable — secret Q for claim verification |
+| `returned_at` | timestamptz | nullable |
+
+### `item_photos`
+One-to-many with `items`.
+
+| Column | Type | Notes |
+|---|---|---|
+| `item_id` | uuid FK → items | |
+| `storage_path` | text | path in `item-photos` Storage bucket |
+
+### `claims`
+A user asserting ownership of a found item, or offering to return a lost one.
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | uuid PK | |
+| `item_id` | uuid FK → items | |
+| `claimer_id` | uuid FK → profiles | |
+| `message` | text | nullable |
+| `state` | enum | `pending` `approved` `rejected` `withdrawn` |
+| `created_at` | timestamptz | |
+
+### `notifications`
+Per-user in-app notification feed. Rows are inserted server-side by database triggers on claim events.
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | uuid PK | |
+| `user_id` | uuid FK → profiles | recipient |
+| `actor_id` | uuid FK → profiles | who triggered the notification |
+| `item_id` | uuid FK → items | nullable |
+| `kind` | enum | `claim_submitted` `claim_approved` `claim_rejected` `sighting_added` |
+| `read_at` | timestamptz | nullable — null = unread |
+| `created_at` | timestamptz | |
+
+### Entity Relationships
+
+```
+profiles ──< items ──< item_photos
+                  ──< claims >── profiles (claimer)
+notifications >── profiles (recipient)
+              >── profiles (actor)
+              >── items
+```
 
 ## Project Structure
 
